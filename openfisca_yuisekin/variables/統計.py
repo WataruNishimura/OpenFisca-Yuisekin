@@ -9,16 +9,15 @@ See https://openfisca.org/doc/key-concepts/variables.html
 # Import from openfisca-core the Python objects used to code the legislation in OpenFisca
 from openfisca_core.periods import MONTH
 from openfisca_core.variables import Variable
-
 # Import the Entities specifically defined for this tax and benefit system
 from openfisca_yuisekin.entities import 世帯
 
 
-class 福祉給付(Variable):
+class 福祉給付総額(Variable):
     value_type = float
     entity = 世帯
     definition_period = MONTH
-    label = "Sum of the benefits perceived by a 世帯"
+    label = "世帯の福祉給付総額"
     reference = "https://stats.gov.example/benefits"
 
     def formula(対象世帯, 対象期間, _parameters):
@@ -35,7 +34,7 @@ class 税金総額(Variable):
     value_type = float
     entity = 世帯
     definition_period = MONTH
-    label = "Sum of the 税金 paid by a 世帯"
+    label = "世帯の税金総額"
     reference = "https://stats.gov.example/税金"
 
     def formula(対象世帯, 対象期間, _parameters):

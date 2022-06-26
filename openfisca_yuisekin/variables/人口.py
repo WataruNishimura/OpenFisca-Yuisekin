@@ -7,15 +7,13 @@ See https://openfisca.org/doc/key-concepts/variables.html
 """
 
 from datetime import date
-from xmlrpc.client import Boolean
 
 # Import from numpy the operations you need to apply on OpenFisca's population vectors
 # Import from openfisca-core the Python objects used to code the legislation in OpenFisca
 from numpy import where
-from openfisca_core.periods import ETERNITY, MONTH, DAY
-from openfisca_core.variables import Variable
 from openfisca_core.indexed_enums import Enum
-
+from openfisca_core.periods import DAY, ETERNITY, MONTH
+from openfisca_core.variables import Variable
 # Import the Entities specifically defined for this tax and benefit system
 from openfisca_yuisekin.entities import 人物
 
@@ -29,11 +27,13 @@ class 誕生年月日(Variable):
     definition_period = ETERNITY  # This variable cannot change over time.
     reference = "https://en.wiktionary.org/wiki/birthdate"
 
+
 class 死亡年月日(Variable):
     value_type = date
     entity = 人物
     label = "人物の死亡年月日"
     definition_period = ETERNITY  # This variable cannot change over time.
+
 
 class 年齢(Variable):
     value_type = int
@@ -64,19 +64,19 @@ class 学年(Variable):
         誕生月 = 誕生年月日.astype("datetime64[M]").astype(int) % 12 + 1
         # 誕生日 = (誕生年月日 - 誕生年月日.astype("datetime64[M]") + 1).astype(int)
 
-        対象期間において早生まれ = (誕生月 < 4) *  (4 <= 対象期間.start.month)
+        対象期間において早生まれ = (誕生月 < 4) * (4 <= 対象期間.start.month)
         早生まれではないが四月以降 = (4 < 誕生月) * (4 <= 対象期間.start.month)
         学年を繰り上げるべき = 対象期間において早生まれ + 早生まれではないが四月以降
 
-        print(学年を繰り上げるべき)
-
         return (対象期間.start.year - 誕生年) + where(学年を繰り上げるべき, 1, 0)
 
-class 行方不明(Variable):
+
+class 行方不明年月日(Variable):
     value_type = bool
     entity = 人物
     definition_period = DAY
-    label = "行方不明"
+    label = "行方不明になった年月日"
+
 
 class 生存状況パターン(Enum):
     __order__ = "生存 死亡 不明"
@@ -84,8 +84,9 @@ class 生存状況パターン(Enum):
     死亡 = "死亡"
     不明 = "不明"
 
+
 class 生存状況(Variable):
-    value_type = Enum 
+    value_type = Enum
     possible_values = 生存状況パターン
     default_value = 生存状況パターン.生存
     entity = 人物
@@ -119,7 +120,7 @@ class 労災障害等級(Variable):
     definition_period = DAY
     label = "障害等級"
 
-class 重度障害者該当(Variable):
+class 労災補償重度障害者該当(Variable):
     value_type = bool
     entity = 人物
     definition_period = DAY
