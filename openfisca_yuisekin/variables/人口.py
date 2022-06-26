@@ -92,7 +92,7 @@ class 生存状況(Variable):
     definition_period = DAY
     label = "生存状況"
 
-class 障害等級パターン(Enum):
+class 労災障害等級パターン(Enum):
     __order__ = "第1級 第2級 第3級重度 第3級 第4級 第5級 第6級 第7級 第8級 第9級 第10級 第11級 第12級 第13級 第14級 障害なし"
     第1級 = "第1級"
     第2級 = "第2級"
@@ -111,10 +111,10 @@ class 障害等級パターン(Enum):
     第14級 = "第14級"
     障害なし = "障害なし"
 
-class 障害等級(Variable):
+class 労災障害等級(Variable):
     value_type = Enum 
-    possible_values = 障害等級パターン
-    default_value = 障害等級パターン.障害なし
+    possible_values = 労災障害等級パターン
+    default_value = 労災障害等級パターン.障害なし
     entity = 人物
     definition_period = DAY
     label = "障害等級"
@@ -129,4 +129,4 @@ class 重度障害者該当(Variable):
         
         障害等級状態 = 対象人物("障害等級", 対象期間)
 
-        return (障害等級状態 == 障害等級パターン.第1級) + (障害等級状態 == 障害等級パターン.第2級) + (障害等級状態 == 障害等級パターン.第3級重度) 
+        return (障害等級状態 == 労災障害等級パターン.第1級) + (障害等級状態 == 労災障害等級パターン.第2級) + (障害等級状態 == 労災障害等級パターン.第3級重度) 
